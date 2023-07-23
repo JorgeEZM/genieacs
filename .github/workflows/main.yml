@@ -22,8 +22,8 @@ jobs:
       - name: Action Docker Login - Auth user on Docker Hub
         uses: docker/login-action@v2.0.0
         with:
-          username: ${{secrets.DOCKERHUB_USER}}
-          password: ${{secrets.DOCKERHUB_PWD}}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PWD }}
       
       - name: Action Build and push Docker images to Docker Hub
         uses: docker/build-push-action@v3.0.0
@@ -33,7 +33,7 @@ jobs:
           push: true
           tags: |
             jorgeezm/genieacs-nbi:latest
-            jorgeezm/genieacs-nbi:${{github.run_number}}
+            jorgeezm/genieacs-nbi:${{ github.run_number }}
   CI-fs:
     runs-on: ubuntu-latest
 
@@ -44,8 +44,8 @@ jobs:
       - name: Action Docker Login - Auth user on Docker Hub
         uses: docker/login-action@v2.0.0
         with:
-          username: ${{secrets.DOCKERHUB_USER}}
-          password: ${{secrets.DOCKERHUB_PWD}}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PWD }}
       
       - name: Action Build and push Docker images to Docker Hub
         uses: docker/build-push-action@v3.0.0
@@ -55,7 +55,7 @@ jobs:
           push: true
           tags: |
             jorgeezm/genieacs-fs:latest
-            jorgeezm/genieacs-fs:${{github.run_number}}
+            jorgeezm/genieacs-fs:${{ github.run_number }}
   CI-ui:
     runs-on: ubuntu-latest
 
@@ -67,8 +67,8 @@ jobs:
       - name: Action Docker Login - Auth user on Docker Hub
         uses: docker/login-action@v2.0.0
         with:
-          username: ${{secrets.DOCKERHUB_USER}}
-          password: ${{secrets.DOCKERHUB_PWD}}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PWD }}
       
       - name: Action Build and push Docker images to Docker Hub
         uses: docker/build-push-action@v3.0.0
@@ -78,7 +78,7 @@ jobs:
           push: true
           tags: |
             jorgeezm/genieacs-ui:latest
-            jorgeezm/genieacs-ui:${{github.run_number}}
+            jorgeezm/genieacs-ui:${{ github.run_number }}
   CI-cwmp:
     runs-on: ubuntu-latest
 
@@ -90,8 +90,8 @@ jobs:
       - name: Action Docker Login - Auth user on Docker Hub
         uses: docker/login-action@v2.0.0
         with:
-          username: ${{secrets.DOCKERHUB_USER}}
-          password: ${{secrets.DOCKERHUB_PWD}}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PWD }}
       
       - name: Action Build and push Docker images to Docker Hub
         uses: docker/build-push-action@v3.0.0
@@ -101,7 +101,7 @@ jobs:
           push: true
           tags: |
             jorgeezm/genieacs-cwmp:latest
-            jorgeezm/genieacs-cwmp:${{github.run_number}}
+            jorgeezm/genieacs-cwmp:${{ github.run_number }}
   CD:
     needs: [CI-cwmp,CI-ui,CI-nbi,CI-fs]
     runs-on: ubuntu-latest
@@ -113,15 +113,15 @@ jobs:
         uses: Azure/k8s-set-context@v2
         with:
           method: kubeconfig
-          kubeconfig: ${{secrets.K8S_CONFIG}}
+          kubeconfig: ${{ secrets.K8S_CONFIG }}
         
       - name: Deploy to Kubernetes cluster on DigitalOcean
         uses: Azure/k8s-deploy@v3.1
         with:
           images: |
-            jorgeezm/genieacs-cwmp:${{github.run_number}}
-            jorgeezm/genieacs-ui:${{github.run_number}}
-            jorgeezm/genieacs-nbi:${{github.run_number}}
-            jorgeezm/genieacs-fs:${{github.run_number}}
+            jorgeezm/genieacs-cwmp:${{ github.run_number }}
+            jorgeezm/genieacs-ui:${{ github.run_number }}
+            jorgeezm/genieacs-nbi:${{ github.run_number }}
+            jorgeezm/genieacs-fs:${{ github.run_number }}
           manifests: |
             ./cicd/deployment.yaml
